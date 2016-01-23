@@ -6,7 +6,7 @@
 
   (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 
-  (defonce app-state (atom {:app/msg "Welcome to KidlinkRN"}))
+  (defonce app-state (atom {:app/msg "Welcome to re-natal + om-next!"}))
 
   (defui MainView
          static om/IQuery
@@ -22,16 +22,6 @@
                        {:style
                         {:fontSize 50 :fontWeight "100" :marginBottom 20 :textAlign "center"}}
                        msg)
-
-                     (text
-                       {:style
-                        {:fontSize 50 :fontWeight "100" :marginBottom 20 :textAlign "center"}}
-                       msg)
-                     ;
-                     ;(text-input
-                     ;  {:style
-                     ;   {:fontSize 20 :borderWidth 2 :height 40}}
-                     ;  "Test")
 
                      (image
                        {:source

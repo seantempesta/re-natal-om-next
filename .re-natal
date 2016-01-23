@@ -3,5 +3,6 @@
   "modules": [],
   "imageDirs": [
     "images"
-  ]
+  ],
+  "device": "C3B05B07-B71D-49E0-ACAB-B62C3E375290"
 }
