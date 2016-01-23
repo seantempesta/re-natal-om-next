@@ -1,33 +1,66 @@
 (ns ^:figwheel-load re-natal-om-next.ios.core
-  (:require [reagent.core :as r :refer [atom]]
-            [re-frame.core :refer [subscribe dispatch dispatch-sync]]
-            [re-natal-om-next.handlers]
-            [re-natal-om-next.subs]))
+      (:require-macros [natal-shell.core :refer [with-error-view]]
+                       [natal-shell.components :refer [view text text-input image touchable-highlight]]
+                       [natal-shell.alert :refer [alert]])
+      (:require [om.next :as om :refer-macros [defui]]))
 
-(set! js/React (js/require "react-native"))
+  (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 
-(def app-registry (.-AppRegistry js/React))
-(def text (r/adapt-react-class (.-Text js/React)))
-(def view (r/adapt-react-class (.-View js/React)))
-(def image (r/adapt-react-class (.-Image js/React)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight js/React)))
+  (defonce app-state (atom {:app/msg "Welcome to KidlinkRN"}))
 
-(def logo-img (js/require "./images/cljs.png"))
+  (defui MainView
+         static om/IQuery
+         (query [this]
+           '[:app/msg])
 
-(defn alert [title]
-      (.alert (.-Alert js/React) title))
+         Object
+         (render [this]
+           (with-error-view
+             (let [{:keys [app/msg]} (om/props this)]
+               (view {:style {:flexDirection "column" :margin 40 :alignItems "center"}}
+                     (text
+                       {:style
+                        {:fontSize 50 :fontWeight "100" :marginBottom 20 :textAlign "center"}}
+                       msg)
 
-(defn app-root []
-  (let [greeting (subscribe [:get-greeting])]
-    (fn []
-      [view {:style {:flex-direction "column" :margin 40 :align-items "center"}}
-       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} @greeting]
-       [image {:source logo-img
-               :style  {:width 80 :height 80 :margin-bottom 30}}]
-       [touchable-highlight {:style {:background-color "#999" :padding 10 :border-radius 5}
-                             :on-press #(alert "HELLO!")}
-        [text {:style {:color "white" :text-align "center" :font-weight "bold"}} "press me"]]])))
+                     (text
+                       {:style
+                        {:fontSize 50 :fontWeight "100" :marginBottom 20 :textAlign "center"}}
+                       msg)
+                     ;
+                     ;(text-input
+                     ;  {:style
+                     ;   {:fontSize 20 :borderWidth 2 :height 40}}
+                     ;  "Test")
+
+                     (image
+                       {:source
+                               {:uri "https://raw.githubusercontent.com/cljsinfo/logo.cljs/master/cljs.png"}
+                        :style {:width 80 :height 80 :marginBottom 30}})
+
+                     (touchable-highlight
+                       {:style {:backgroundColor "#999" :padding 10 :borderRadius 5}
+                        :onPress #(alert "HELLO!")}
+
+                       (text
+                         {:style {:color "white" :textAlign "center" :fontWeight "bold"}}
+                         "press me!")))))))
+
+
+  (defmulti read om/dispatch)
+  (defmethod read :default
+             [{:keys [state]} k _]
+             (let [st @state]
+               (if-let [[_ v] (find st k)]
+                 {:value v}
+                 {:value :not-found})))
+
+  (def reconciler
+       (om/reconciler
+         {:state app-state
+          :parser (om/parser {:read read})
+          :root-render #(.render js/React %1 %2)
+          :root-unmount #(.unmountComponentAtNode js/React %)}))
 
 (defn init []
-      (dispatch-sync [:initialize-db])
-      (.registerComponent app-registry "reNatalOmNext" #(r/reactify-component app-root)))
+  (om/add-root! reconciler MainView 1))
