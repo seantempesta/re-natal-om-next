@@ -4,7 +4,7 @@ Want to use re-natal with om-next?  Just follow the steps below (it's pretty eas
 
 ## Usage
 1. Download and install re-natal and all of it's dependencies
-2. Run re-natal init with your project name [c5745272f8b27aa885d0ee430334fdd0c411be85](diff)
+2. Run re-natal init with your project name [diff](c5745272f8b27aa885d0ee430334fdd0c411be85)
 ```sh
 $ re-natal init reNatalOmNext 
 ```
