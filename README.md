@@ -13,3 +13,9 @@ $ re-natal init reNatalOmNext
 5. Remove references to reagent and the figwheel counter in the env/dev/env/[android|ios]/main.cljs files [diff](https://github.com/seantempesta/re-natal-om-next/commit/6b76367356cc831857cb06dc61309ffe84552293)
 6. Put in the om-next code from regular natal and put the (om/add-root!) part in an init function [diff](https://github.com/seantempesta/re-natal-om-next/commit/d628c123877cd05716ba0353e658180fa9f511f1)
 
+
+## WARNING:  If you run:
+```
+re-natal use-figwheel
+```
+it will reset the env/dev/env/[android|ios]/main.cljs files and you'll have to re-edit them later to remove the reagent dependencies
