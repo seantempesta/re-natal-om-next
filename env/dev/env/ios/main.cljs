@@ -6,6 +6,7 @@
 
 (figwheel/watch-and-reload
  :websocket-url "ws://localhost:3449/figwheel-ws"
- :heads-up-display true)
+ :heads-up-display true
+ :jsload-callback re-natal-om-next.ios.core/init)
 
 (core/init)
